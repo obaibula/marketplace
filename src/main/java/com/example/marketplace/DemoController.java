@@ -15,6 +15,12 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class DemoController {
     private final Faker faker;
+    private final UserRepository userRepository;
+
+    @GetMapping("/fromDb")
+    public List<User> allUsers(){
+        return userRepository.findAll();
+    }
 
     @GetMapping
     public List<Character> all() {
