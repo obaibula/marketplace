@@ -5,10 +5,11 @@ import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import jakarta.servlet.http.HttpServletRequest;
 import ua_parser.Client;
 import ua_parser.Parser;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.InetAddress;
 
@@ -21,13 +22,6 @@ public class GeoIPLocationService {
     private final DatabaseReader databaseReader;
     private static final String UNKNOWN = "UNKNOWN";
 
-    /**
-     * Get device info by user agent
-     *
-     * @param userAgent user agent http device
-     * @return Device info details
-     * @throws IOException if not found
-     */
     private String getDeviceDetails(String userAgent) throws IOException {
         String deviceDetails = UNKNOWN;
 
@@ -41,15 +35,6 @@ public class GeoIPLocationService {
 
         return deviceDetails;
     }
-
-    /**
-     * get user position by ip address
-     *
-     * @param ip String ip address
-     * @return UserPositionDTO model
-     * @throws IOException     if local database city not exist
-     * @throws GeoIp2Exception if cannot get info by ip address
-     */
 
     public GeoIP getIpLocation(String ip, HttpServletRequest request) throws IOException, GeoIp2Exception {
 
