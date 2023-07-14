@@ -18,6 +18,8 @@ public class LocationController {
     @GetMapping
     public GeoIP ping(HttpServletRequest request){
 
-        return geoIPLocationService.getIpLocation(request.getRemoteAddr(), request);
+        String ip = request.getRemoteAddr();
+
+        return geoIPLocationService.getIpLocation(ip, request);
     }
 }
