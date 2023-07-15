@@ -31,15 +31,17 @@ public class GeoIPLocationService {
 
         sql = sql + "'" + ip + "';";
 
-        var position = jdbcTemplate.query(sql, new GeoIPRowMapper());
+        var position = jdbcTemplate.query(sql, new GeoIPRowMapper(ip));
 
         return position.stream()
                 .findFirst()
-                .orElse(new GeoIP("Kyiv", 50.4501, 30.5234));
+                .orElse(new GeoIP("Genereated", "Kyiv", 50.4501, 30.5234));
     }
 }
 
+@RequiredArgsConstructor
 class GeoIPRowMapper implements RowMapper<GeoIP>{
+    private final String ip;
 
     @Override
     public GeoIP mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -47,6 +49,6 @@ class GeoIPRowMapper implements RowMapper<GeoIP>{
         var longitude = rs.getDouble("longitude");
         var city = rs.getString("city_name");
 
-        return new GeoIP(city, latitude, longitude);
+        return new GeoIP(ip, city, latitude, longitude);
     }
 }
