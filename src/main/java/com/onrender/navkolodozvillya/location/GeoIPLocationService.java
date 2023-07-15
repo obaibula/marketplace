@@ -35,7 +35,7 @@ public class GeoIPLocationService {
 
         return position.stream()
                 .findFirst()
-                .orElse(new GeoIP("Genereated", "Kyiv", 50.4501, 30.5234));
+                .orElse(new GeoIP(("Genereted: " + ip), "Kyiv", 50.4501, 30.5234));
     }
 }
 
