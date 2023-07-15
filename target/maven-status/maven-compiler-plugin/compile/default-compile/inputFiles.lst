@@ -1,6 +1,4 @@
-C:\Users\kuznetsov.aa.HITED1UA\IdeaProjects\marketplace\src\main\java\com\example\marketplace\GlobalExceptionHandler.java
-C:\Users\kuznetsov.aa.HITED1UA\IdeaProjects\marketplace\src\main\java\com\example\marketplace\LocationController.java
-C:\Users\kuznetsov.aa.HITED1UA\IdeaProjects\marketplace\src\main\java\com\example\marketplace\GeoIP.java
-C:\Users\kuznetsov.aa.HITED1UA\IdeaProjects\marketplace\src\main\java\com\example\marketplace\GeoLocationConfig.java
-C:\Users\kuznetsov.aa.HITED1UA\IdeaProjects\marketplace\src\main\java\com\example\marketplace\GeoIPLocationService.java
-C:\Users\kuznetsov.aa.HITED1UA\IdeaProjects\marketplace\src\main\java\com\example\marketplace\MarketplaceApplication.java
+/home/oleh/IdeaProjects/marketplace/src/main/java/com/example/marketplace/location/GeoIP.java
+/home/oleh/IdeaProjects/marketplace/src/main/java/com/example/marketplace/location/LocationController.java
+/home/oleh/IdeaProjects/marketplace/src/main/java/com/example/marketplace/MarketplaceApplication.java
+/home/oleh/IdeaProjects/marketplace/src/main/java/com/example/marketplace/location/GeoIPLocationService.java
