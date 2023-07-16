@@ -20,7 +20,7 @@ public class GeoIpServiceImpl implements GeoIpService {
         log.info("IP address received: {}", ipAddress);
 
         return geoIPLocationRepository.getIpLocation(ipAddress)
-                .orElse(new GeoIP(("Genereted: " + ipAddress), "Kyiv", 50.4501, 30.5234));
+                .orElse(new GeoIP(("Genereted for : " + ipAddress), "Kyiv", 50.4501, 30.5234));
     }
 
     private static String getIpAddress(HttpServletRequest request) {

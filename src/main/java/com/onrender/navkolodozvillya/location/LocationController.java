@@ -16,7 +16,7 @@ public class LocationController {
 
     @GetMapping
     public ResponseEntity<GeoIP> getCity(HttpServletRequest request){
-        GeoIP location = geoIpService.getIpLocation(request);
+        var location = geoIpService.getIpLocation(request);
         return ResponseEntity.ok(location);
     }
 }
