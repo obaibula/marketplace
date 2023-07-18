@@ -7,13 +7,17 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 @TestConfiguration(proxyBeanMethods = false)
 public class TestDatabaseContainerConfig {
 
     @Bean
     @ServiceConnection
     @DynamicPropertySource
-    PostgreSQLContainer<?> postgresContainer(DynamicPropertyRegistry registry) {
+    public PostgreSQLContainer<?> postgresContainer(DynamicPropertyRegistry registry) {
         PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:14.8");
         addAppropriateDataSources(registry, container);
         return container;

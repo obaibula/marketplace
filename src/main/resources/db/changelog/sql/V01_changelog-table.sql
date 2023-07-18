@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS "geoip2_location" (
 -- changeset obaibula:4 contextFilter:test
 INSERT INTO "geoip2_network" ("network", "geoname_id", "registered_country_geoname_id", "represented_country_geoname_id", "is_anonymous_proxy", "is_satellite_provider", "postal_code", "latitude", "longitude", "accuracy_radius")
 VALUES
-    ('192.0.2.0/24', 12345, 54321, NULL, FALSE, FALSE, '12345', 37.7749, -122.4194, 10),
+    ('176.36.192.0/20', 12345, 54321, NULL, FALSE, FALSE, '12345', 37.7749, -122.4194, 10),
     ('203.0.113.0/24', 54321, 98765, 24680, TRUE, TRUE, '54321', 40.7128, -74.0060, 20),
     ('198.51.100.0/24', NULL, NULL, NULL, FALSE, FALSE, NULL, 34.0522, -118.2437, 15),
     ('2001:db8::/32', 98765, NULL, NULL, TRUE, FALSE, '98765', 51.5074, -0.1278, 30);
