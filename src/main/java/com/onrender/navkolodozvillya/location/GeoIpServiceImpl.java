@@ -11,7 +11,7 @@ import static java.util.Objects.requireNonNull;
 @RequiredArgsConstructor
 @Log4j2
 public class GeoIpServiceImpl implements GeoIpService {
-    private final GeoIPLocationRepository geoIPLocationRepository;
+    private final GeoIpRepository geoIpRepository;
     @Override
     public GeoIP getIpLocation(HttpServletRequest request) {
         requireNonNull(request, "request is null");
@@ -19,7 +19,7 @@ public class GeoIpServiceImpl implements GeoIpService {
         String ipAddress = getIpAddress(request);
         log.info("IP address received: {}", ipAddress);
 
-        return geoIPLocationRepository.getIpLocation(ipAddress)
+        return geoIpRepository.getIpLocation(ipAddress)
                 .orElse(new GeoIP(("Genereted for : " + ipAddress), "Kyiv", 50.4501, 30.5234));
     }
 

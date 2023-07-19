@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class GeoIpServiceImplTest {
     @Mock
-    private GeoIPLocationRepository repository;
+    private GeoIpRepository repository;
     @Mock
     private HttpServletRequest request;
 
