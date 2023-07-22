@@ -1,1 +1,6 @@
+/home/oleh/IdeaProjects/marketplace/src/test/java/com/onrender/navkolodozvillya/location/GeoIpServiceImplTest.java
 /home/oleh/IdeaProjects/marketplace/src/test/java/com/onrender/navkolodozvillya/MarketplaceApplicationTest.java
+/home/oleh/IdeaProjects/marketplace/src/test/java/com/onrender/navkolodozvillya/config/TestDatabaseContainerConfig.java
+/home/oleh/IdeaProjects/marketplace/src/test/java/com/onrender/navkolodozvillya/integration/LocationIT.java
+/home/oleh/IdeaProjects/marketplace/src/test/java/com/onrender/navkolodozvillya/location/GeoIpRepositoryImplTest.java
+/home/oleh/IdeaProjects/marketplace/src/test/java/com/onrender/navkolodozvillya/location/LocationControllerTest.java

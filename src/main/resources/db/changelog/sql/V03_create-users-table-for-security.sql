@@ -9,3 +9,8 @@ CREATE TABLE IF NOT EXISTS users (
     password TEXT NOT NULL,
     role TEXT DEFAULT 'CUSTOMER'
 )
+
+-- changeset obaibula:7 contextFilter:test
+-- Create test data for users table
+INSERT INTO users(email, password)
+VALUES('user@mail.com', 'qWaSzX123!#')

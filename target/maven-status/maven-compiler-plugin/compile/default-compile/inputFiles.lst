@@ -1,6 +1,7 @@
+/home/oleh/IdeaProjects/marketplace/src/main/java/com/onrender/navkolodozvillya/location/GeoIpRepositoryImpl.java
+/home/oleh/IdeaProjects/marketplace/src/main/java/com/onrender/navkolodozvillya/location/GeoIpRepository.java
 /home/oleh/IdeaProjects/marketplace/src/main/java/com/onrender/navkolodozvillya/location/LocationController.java
 /home/oleh/IdeaProjects/marketplace/src/main/java/com/onrender/navkolodozvillya/location/GeoIP.java
 /home/oleh/IdeaProjects/marketplace/src/main/java/com/onrender/navkolodozvillya/location/GeoIpService.java
-/home/oleh/IdeaProjects/marketplace/src/main/java/com/onrender/navkolodozvillya/location/GeoIPLocationRepository.java
 /home/oleh/IdeaProjects/marketplace/src/main/java/com/onrender/navkolodozvillya/location/GeoIpServiceImpl.java
 /home/oleh/IdeaProjects/marketplace/src/main/java/com/onrender/navkolodozvillya/MarketplaceApplication.java
