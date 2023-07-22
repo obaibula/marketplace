@@ -1,5 +1,6 @@
 package com.onrender.navkolodozvillya.config;
 
+import com.onrender.navkolodozvillya.token.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final TokenRepository tokenRepository;
 
     @Override
     protected void doFilterInternal(
@@ -46,8 +48,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .getAuthentication() != null;
         if(userEmail != null && !isUserAuthenticated){
             // get user from the db
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-            if(jwtService.isTokenValid(jwtToken, userDetails)){
+            var userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            var isTokenValid = tokenRepository.findByToken(jwtToken)
+                    .map(t -> !t.isExpired() && !t.isRevoked())
+                    .orElse(false);
+            if(jwtService.isTokenValid(jwtToken, userDetails) && isTokenValid){
                 // Update security context and send a request to DispatcherServlet
                 var authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,

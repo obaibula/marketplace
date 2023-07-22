@@ -1,6 +1,7 @@
 package com.onrender.navkolodozvillya.user;
 
 
+import com.onrender.navkolodozvillya.token.Token;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,6 +42,9 @@ public class User implements UserDetails {
     // todo: consider creating entity of roles instead of this approach...
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
