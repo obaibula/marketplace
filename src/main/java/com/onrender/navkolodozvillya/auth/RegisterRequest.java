@@ -1,8 +1,23 @@
 package com.onrender.navkolodozvillya.auth;
 
+import jakarta.validation.constraints.*;
+
 // todo: impl validation, only unique email are allowed
-public record RegisterRequest(String firstName,
-                              String lastName,
-                              String email,
-                              String password) {
+public record RegisterRequest(
+
+        @Pattern(regexp = "^[\\u0400-\\u04FF]+$",
+                message = "Invalid first_name: must contain only Ukrainian characters")
+        String firstName,
+        @Pattern(regexp = "^[\\u0400-\\u04FF]+$",
+                message = "Invalid last_name: must contain only Ukrainian characters")
+        String lastName,
+        @Email(message = "Invalid email")
+        String email,
+        @NotNull(message = "Password must not be null")
+        @Pattern(regexp = "^(?=.*\\d)(?=.*\\p{Lower})(?=.*\\p{Upper})(?=.*\\p{Punct}).*$",
+                message = "Invalid password: must contain numbers, " +
+                        "lowercase and uppercase latin letters, " +
+                        "and special symbols")
+        @Size(min = 8, max = 64, message = "Invalid password: must be of 8-64 characters")
+        String password) {
 }
