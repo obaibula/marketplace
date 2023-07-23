@@ -38,9 +38,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        // If a token exists, then extract a token from the header
+        // If a accessToken exists, then extract a accessToken from the header
         jwtToken = authHeader.substring(7);
-        // Check if we have a user with such a token in the database
+        // Check if we have a user with such a accessToken in the database
         userEmail = jwtService.extractUsername(jwtToken);
 
         // Check if user is authenticated
