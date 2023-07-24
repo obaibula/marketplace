@@ -1,6 +1,6 @@
 -- liquibase formatted sql
 
--- changeset obaibula:6 contextFilter:prod
+-- changeset obaibula:8 contextFilter:prod
 CREATE TABLE IF NOT EXISTS tokens(
     id BIGSERIAL PRIMARY KEY,
     token TEXT,
