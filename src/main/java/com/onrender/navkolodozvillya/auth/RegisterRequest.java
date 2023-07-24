@@ -5,12 +5,13 @@ import jakarta.validation.constraints.*;
 public record RegisterRequest(
 
         @Pattern(regexp = "^[\\u0400-\\u04FF]+$",
-                message = "Invalid first_name: must contain only Ukrainian characters")
+                message = "Invalid first name: must contain only Ukrainian characters")
         String firstName,
         @Pattern(regexp = "^[\\u0400-\\u04FF]+$",
-                message = "Invalid last_name: must contain only Ukrainian characters")
+                message = "Invalid last name: must contain only Ukrainian characters")
         String lastName,
         @Email(message = "Invalid email")
+        @NotNull(message = "Email must not be null")
         String email,
         @NotNull(message = "Password must not be null")
         @Pattern(regexp = "^(?=.*\\d)(?=.*\\p{Lower})(?=.*\\p{Upper})(?=.*\\p{Punct}).*$",
