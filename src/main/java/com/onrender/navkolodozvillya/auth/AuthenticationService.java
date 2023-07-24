@@ -81,8 +81,7 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response){
+            HttpServletRequest request){
         final String authHeader = request.getHeader(AUTHORIZATION);
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             throw new MissingAuthorizationHeaderException("Missing or invalid 'Authorization' header");

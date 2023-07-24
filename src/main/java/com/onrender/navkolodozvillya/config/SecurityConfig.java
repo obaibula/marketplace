@@ -27,7 +27,7 @@ public class SecurityConfig {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/**") // white list for authentication
+                .requestMatchers("/auth/**", "/city") // white list for authentication
                 .permitAll()
                 .anyRequest()
                 .authenticated()
