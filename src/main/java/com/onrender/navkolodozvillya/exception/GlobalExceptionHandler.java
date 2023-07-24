@@ -1,19 +1,19 @@
 package com.onrender.navkolodozvillya.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.validation.FieldError;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 @Log4j2
@@ -27,6 +27,29 @@ public class GlobalExceptionHandler {
                 .map(FieldError::getDefaultMessage)
                 .toList();
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<Map<String, List<String>>>
+    handleValidationErrors(AuthorizationException e) {
+        e.printStackTrace();
+        var errors = List.of(e.getMessage());
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public final ResponseEntity<Map<String, List<String>>>
+    handleEntityNotFoundException(EntityNotFoundException e){
+        e.printStackTrace();
+        var errors = List.of(e.getMessage());
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), NOT_FOUND);
+    }
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public final ResponseEntity<Map<String, List<String>>>
+    handleEntityNotFoundException(UserAlreadyExistsException e){
+        e.printStackTrace();
+        var errors = List.of(e.getMessage());
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), CONFLICT);
     }
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Map<String, List<String>>>

@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import static java.lang.System.currentTimeMillis;
 import static java.util.Collections.emptyMap;
 
 @Service
+@Log4j2
 public class JwtService {
 
     @Value("${application.security.jwt.secret-key}")
@@ -71,9 +73,12 @@ public class JwtService {
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
-    // todo: log or throw ex, when accessToken is expired
     private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date(currentTimeMillis()));
+        boolean isExpired = extractExpiration(token).before(new Date(currentTimeMillis()));
+        if(isExpired){
+            log.info("Provided token is expired");
+        }
+        return isExpired;
     }
 
     private Date extractExpiration(String token) {

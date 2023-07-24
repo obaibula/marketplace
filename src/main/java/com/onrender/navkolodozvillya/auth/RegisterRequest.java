@@ -2,7 +2,6 @@ package com.onrender.navkolodozvillya.auth;
 
 import jakarta.validation.constraints.*;
 
-// todo: impl validation, only unique email are allowed
 public record RegisterRequest(
 
         @Pattern(regexp = "^[\\u0400-\\u04FF]+$",

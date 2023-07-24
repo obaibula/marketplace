@@ -1,6 +1,10 @@
 package com.onrender.navkolodozvillya.auth;
 
 import com.onrender.navkolodozvillya.config.JwtService;
+import com.onrender.navkolodozvillya.exception.InvalidTokenException;
+import com.onrender.navkolodozvillya.exception.MissingAuthorizationHeaderException;
+import com.onrender.navkolodozvillya.exception.UserAlreadyExistsException;
+import com.onrender.navkolodozvillya.exception.UserNotFoundException;
 import com.onrender.navkolodozvillya.token.Token;
 import com.onrender.navkolodozvillya.token.TokenRepository;
 import com.onrender.navkolodozvillya.user.Role;
@@ -29,10 +33,17 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        String email = request.email();
+
+        // check for duplicate emails
+        var isUserExists = userRepository.findByEmail(email).isPresent();
+        if(isUserExists){
+            throw new UserAlreadyExistsException("User already exists with email: " + email);
+        }
         var user = User.builder()
                 .firstName(request.firstName())
                 .lastName(request.lastName())
-                .email(request.email())
+                .email(email)
                 .password(passwordEncoder.encode(request.password()))
                 .role(Role.CUSTOMER)
                 .build();
@@ -46,14 +57,15 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        String email = request.email();
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.email(),
+                        email,
                         request.password()
                 )
         );
-        var user = userRepository.findByEmail(request.email())
-                .orElseThrow(); //todo: throw correct exc
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
@@ -64,31 +76,30 @@ public class AuthenticationService {
 
     public AuthenticationResponse refreshToken(
             HttpServletRequest request,
-            HttpServletResponse response) {
-
+            HttpServletResponse response){
         final String authHeader = request.getHeader(AUTHORIZATION);
-        final String refreshToken;
-        String accessToken = null; // todo: refactor
-        final String userEmail;
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return null; // todo: throw appropriate ex
+        if(authHeader == null || !authHeader.startsWith("Bearer ")){
+            throw new MissingAuthorizationHeaderException("Missing or invalid 'Authorization' header");
         }
-        // If a accessToken exists, then extract a refreshToken from the header
-        refreshToken = authHeader.substring(7);
-        // Check if we have a user with such a refreshToken in the database
-        userEmail = jwtService.extractUsername(refreshToken);
 
-        if (userEmail != null) {
-            // get user from the db
-            var user = this.userRepository.findByEmail(userEmail)
-                    .orElseThrow(); // todo: throw appropriate ex
-            if (jwtService.isTokenValid(refreshToken, user)) {
-                accessToken = jwtService.generateToken(user);
-                revokeAllUserTokens(user);
-                saveUserToken(user, accessToken);
-            }
+        final String refreshToken = authHeader.substring(7);
+        final String userEmail = jwtService.extractUsername(refreshToken);
+
+        if(userEmail == null){
+            throw  new InvalidTokenException("Invalid refresh token");
         }
-        return new AuthenticationResponse(accessToken, refreshToken);
+
+        var user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + userEmail));
+
+        if(jwtService.isTokenValid(refreshToken, user)){
+            var accessToken = jwtService.generateToken(user);
+            revokeAllUserTokens(user);
+            saveUserToken(user, accessToken);
+            return new AuthenticationResponse(accessToken, refreshToken);
+        } else{
+            throw  new InvalidTokenException("Invalid refresh token");
+        }
     }
 
     private void revokeAllUserTokens(User user) {
