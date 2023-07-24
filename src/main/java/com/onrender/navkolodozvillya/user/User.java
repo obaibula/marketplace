@@ -2,6 +2,7 @@ package com.onrender.navkolodozvillya.user;
 
 
 import com.onrender.navkolodozvillya.cart.Cart;
+import com.onrender.navkolodozvillya.offering.Offering;
 import com.onrender.navkolodozvillya.token.Token;
 import jakarta.persistence.*;
 import lombok.*;
@@ -51,6 +52,28 @@ public class User implements UserDetails {
             fetch = FetchType.LAZY,
             orphanRemoval = true)
     private Cart cart;
+
+    @OneToMany(mappedBy = "user",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL)
+    private List<Offering> offerings;
+
+    public void addOffering(Offering offering){
+        offerings.add(offering);
+        offering.setUser(this);
+    }
+
+    public void removeOffering(Offering offering){
+        offerings.remove(offering);
+        offering.setUser(null);
+    }
+
+    public void setCart(Cart cart) {
+        if (cart == null) {
+            if (this.cart != null) this.cart.setUser(null);
+        } else cart.setUser(this);
+        this.cart = cart;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
