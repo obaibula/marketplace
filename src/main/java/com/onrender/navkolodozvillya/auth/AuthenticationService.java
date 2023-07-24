@@ -1,5 +1,6 @@
 package com.onrender.navkolodozvillya.auth;
 
+import com.onrender.navkolodozvillya.cart.CartService;
 import com.onrender.navkolodozvillya.config.JwtService;
 import com.onrender.navkolodozvillya.exception.InvalidTokenException;
 import com.onrender.navkolodozvillya.exception.MissingAuthorizationHeaderException;
@@ -18,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.onrender.navkolodozvillya.token.TokenType.BEARER;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -30,8 +32,10 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final CartService cartService;
     private final AuthenticationManager authenticationManager;
 
+    @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
         String email = request.email();
 
@@ -51,6 +55,8 @@ public class AuthenticationService {
         var persistedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
+        var createdCart = cartService.createCart(persistedUser); // create cart at registration
+        persistedUser.setCart(createdCart);
         saveUserToken(persistedUser, jwtToken);
 
         return new AuthenticationResponse(jwtToken, refreshToken);
@@ -75,8 +81,7 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response){
+            HttpServletRequest request){
         final String authHeader = request.getHeader(AUTHORIZATION);
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             throw new MissingAuthorizationHeaderException("Missing or invalid 'Authorization' header");

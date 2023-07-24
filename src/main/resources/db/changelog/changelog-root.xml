@@ -9,4 +9,5 @@
     <include file="db/changelog/sql/V02_create-geoip-index.sql"/>
     <include file="db/changelog/sql/V03_create-users-table-for-security.sql"/>
     <include file="db/changelog/sql/V04_create-tokens-table.sql"/>
+    <include file="db/changelog/sql/V05_create-carts-table.sql"/>
 </databaseChangeLog>
