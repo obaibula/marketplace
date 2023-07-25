@@ -20,7 +20,7 @@ public class OfferingController {
     private final OfferingService offeringService;
 
     @GetMapping
-    public ResponseEntity<List<Offering>> getAll(Pageable pageable){
+    public ResponseEntity<List<OfferingResponse>> getAll(Pageable pageable){
         var offerings = offeringService.findAll(createPageRequest(pageable));
 
         return new ResponseEntity<>(offerings, OK);
