@@ -2,6 +2,7 @@ package com.onrender.navkolodozvillya.user;
 
 
 import com.onrender.navkolodozvillya.cart.Cart;
+import com.onrender.navkolodozvillya.favouriteoffering.FavouriteOffering;
 import com.onrender.navkolodozvillya.offering.Offering;
 import com.onrender.navkolodozvillya.token.Token;
 import jakarta.persistence.*;
@@ -58,12 +59,17 @@ public class User implements UserDetails {
             cascade = CascadeType.ALL)
     private List<Offering> offerings;
 
-    public void addOffering(Offering offering){
+    @OneToMany(mappedBy = "user",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL)
+    private List<FavouriteOffering> favouriteOfferings;
+
+    public void addOffering(Offering offering) {
         offerings.add(offering);
         offering.setUser(this);
     }
 
-    public void removeOffering(Offering offering){
+    public void removeOffering(Offering offering) {
         offerings.remove(offering);
         offering.setUser(null);
     }

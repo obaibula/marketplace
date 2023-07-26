@@ -11,4 +11,5 @@
     <include file="db/changelog/sql/V04_create-tokens-table.sql"/>
     <include file="db/changelog/sql/V05_create-carts-table.sql"/>
     <include file="db/changelog/sql/V06_create-offerings-table.sql"/>
+    <include file="db/changelog/sql/V07_create-favorite_offerings-table.sql"/>
 </databaseChangeLog>
