@@ -1,5 +1,6 @@
 package com.onrender.navkolodozvillya.favouriteoffering;
 
+import com.onrender.navkolodozvillya.exception.OfferingIsAlreadyInFavoritesException;
 import com.onrender.navkolodozvillya.exception.OfferingNotFoundException;
 import com.onrender.navkolodozvillya.exception.UserNotFoundException;
 import com.onrender.navkolodozvillya.offering.OfferingRepository;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +21,7 @@ public class FavouriteOfferingServiceImpl implements FavouriteOfferingService {
     private final FavouriteOfferingRepository favouriteOfferingRepository;
     private final UserRepository userRepository;
     private final OfferingRepository offeringRepository;
+    private final FavouriteOfferingResponseMapper mapper;
     @Override
     public List<FavouriteOfferingResponse> findAllBy(Principal principal) {
         String userEmail = principal.getName();
@@ -30,8 +33,15 @@ public class FavouriteOfferingServiceImpl implements FavouriteOfferingService {
     // todo: refactor, it works, but overcomplicated(?)
     public FavouriteOfferingResponse save(Long offeringId, Principal principal) {
         var userEmail = principal.getName();
+        // All offerings must be unique for every user in their favorites
+        var favoriteOfferingExists =
+                favouriteOfferingRepository.existsByUserEmailAndOfferingId(userEmail, offeringId);
+        if (favoriteOfferingExists) {
+            throw new OfferingIsAlreadyInFavoritesException("Offering is already in favorites.");
+        }
 
-        var user = userRepository.findByEmail(userEmail)
+        // If the offering is not in the user's favorites, add it.
+        var user = userRepository.findByEmail(userEmail) // todo: Why is the cart eagerly fetched?
                 .orElseThrow(() -> new UserNotFoundException("User not found with email - " + userEmail));
         var offering = offeringRepository.findById(offeringId)
                 .orElseThrow(() -> new OfferingNotFoundException("Offering not found with id - " + offeringId));
@@ -43,6 +53,6 @@ public class FavouriteOfferingServiceImpl implements FavouriteOfferingService {
 
         var saved = favouriteOfferingRepository.save(favourite);
 
-        return new FavouriteOfferingResponse(saved.getId(), user.getId(), offeringId);
+        return mapper.apply(saved);
     }
 }

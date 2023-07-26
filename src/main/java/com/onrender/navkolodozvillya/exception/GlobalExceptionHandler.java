@@ -44,9 +44,9 @@ public class GlobalExceptionHandler {
         var errors = List.of(e.getMessage());
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), NOT_FOUND);
     }
-    @ExceptionHandler(UserAlreadyExistsException.class)
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
     public final ResponseEntity<Map<String, List<String>>>
-    handleEntityNotFoundException(UserAlreadyExistsException e){
+    handleResourceAlreadyExistsException(ResourceAlreadyExistsException e){
         e.printStackTrace();
         var errors = List.of(e.getMessage());
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), CONFLICT);
