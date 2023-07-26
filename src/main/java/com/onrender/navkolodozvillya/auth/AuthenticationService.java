@@ -55,8 +55,7 @@ public class AuthenticationService {
         var persistedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
-        var createdCart = cartService.createCart(persistedUser); // create cart at registration
-        persistedUser.setCart(createdCart);
+        cartService.createCart(persistedUser); // create cart at registration
         saveUserToken(persistedUser, jwtToken);
 
         return new AuthenticationResponse(jwtToken, refreshToken);

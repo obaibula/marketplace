@@ -48,12 +48,6 @@ public class User implements UserDetails {
             cascade = CascadeType.ALL)
     private List<Token> tokens;
 
-    @OneToOne(mappedBy = "user",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
-            orphanRemoval = true)
-    private Cart cart;
-
     @OneToMany(mappedBy = "user",
             orphanRemoval = true,
             cascade = CascadeType.ALL)
@@ -83,14 +77,6 @@ public class User implements UserDetails {
         favouriteOfferings.remove(favouriteOffering);
         favouriteOffering.setUser(null);
     }
-
-    public void setCart(Cart cart) {
-        if (cart == null) {
-            if (this.cart != null) this.cart.setUser(null);
-        } else cart.setUser(this);
-        this.cart = cart;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.toString()));
