@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface OfferingService {
     List<OfferingResponse> findAll(Pageable pageable);
+
+    OfferingResponse findById(Long offeringId);
 }

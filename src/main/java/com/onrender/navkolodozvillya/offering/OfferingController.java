@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +25,13 @@ public class OfferingController {
         var offerings = offeringService.findAll(createPageRequest(pageable));
 
         return new ResponseEntity<>(offerings, OK);
+    }
+
+    @GetMapping("/{offeringId}")
+    public ResponseEntity<OfferingResponse> getOne(@PathVariable Long offeringId){
+        var offeringResponse = offeringService.findById(offeringId);
+        return ResponseEntity.ok(offeringResponse);
+
     }
 
     private Pageable createPageRequest(Pageable pageable) {

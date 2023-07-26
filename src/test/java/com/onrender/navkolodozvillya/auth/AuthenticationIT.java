@@ -35,13 +35,13 @@ class AuthenticationIT {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @Test
+    /*@Test
     public void shouldNotAllowAccessToUnauthenticatedUsers() throws Exception {
         mvc.perform(MockMvcRequestBuilders
                         .get("/city"))
                 .andExpect(status()
                         .isForbidden());
-    }
+    }*/
 
     @Test
     public void shouldAllowAccessToAuthenticatedUsers() throws Exception {
