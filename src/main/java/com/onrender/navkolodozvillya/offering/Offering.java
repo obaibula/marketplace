@@ -1,11 +1,13 @@
 package com.onrender.navkolodozvillya.offering;
 
+import com.onrender.navkolodozvillya.favouriteoffering.FavouriteOffering;
 import com.onrender.navkolodozvillya.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "offerings")
@@ -45,6 +47,21 @@ public class Offering {
             optional = false)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "offering",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL)
+    private List<FavouriteOffering> favouriteOfferings;
+
+    public void addFavouriteOffering(FavouriteOffering favouriteOffering) {
+        favouriteOfferings.add(favouriteOffering);
+        favouriteOffering.setOffering(this);
+    }
+
+    public void removeFavouriteOffering(FavouriteOffering favouriteOffering) {
+        favouriteOfferings.remove(favouriteOffering);
+        favouriteOffering.setOffering(null);
+    }
 
     @PrePersist
     protected void onCreate() {

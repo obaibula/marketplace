@@ -74,6 +74,16 @@ public class User implements UserDetails {
         offering.setUser(null);
     }
 
+    public void addFavouriteOffering(FavouriteOffering favouriteOffering) {
+        favouriteOfferings.add(favouriteOffering);
+        favouriteOffering.setUser(this);
+    }
+
+    public void removeFavouriteOffering(FavouriteOffering favouriteOffering) {
+        favouriteOfferings.remove(favouriteOffering);
+        favouriteOffering.setUser(null);
+    }
+
     public void setCart(Cart cart) {
         if (cart == null) {
             if (this.cart != null) this.cart.setUser(null);

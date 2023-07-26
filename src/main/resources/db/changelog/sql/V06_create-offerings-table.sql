@@ -1,7 +1,7 @@
 -- liquibase formatted sql
 
 -- changeset obaibula:10 contextFilter:prod
-CREATE TABLE offerings(
+CREATE TABLE IF NOT EXISTS offerings(
     id BIGSERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT NOT NULL,
