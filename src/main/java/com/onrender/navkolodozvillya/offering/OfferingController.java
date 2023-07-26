@@ -24,7 +24,7 @@ public class OfferingController {
     public ResponseEntity<List<OfferingResponse>> getAll(Pageable pageable){
         var offerings = offeringService.findAll(createPageRequest(pageable));
 
-        return new ResponseEntity<>(offerings, OK);
+        return ResponseEntity.ok(offerings);
     }
 
     @GetMapping("/{offeringId}")

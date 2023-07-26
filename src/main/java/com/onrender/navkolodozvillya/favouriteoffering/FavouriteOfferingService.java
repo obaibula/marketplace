@@ -5,4 +5,6 @@ import java.util.List;
 
 public interface FavouriteOfferingService {
     List<FavouriteOfferingResponse> findAllBy(Principal principal);
+
+    FavouriteOfferingResponse save(Long offeringId, Principal principal);
 }
