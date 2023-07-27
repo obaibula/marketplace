@@ -1,10 +1,6 @@
 package com.onrender.navkolodozvillya.favouriteoffering;
 
 import com.onrender.navkolodozvillya.exception.OfferingIsAlreadyInFavoritesException;
-import com.onrender.navkolodozvillya.exception.OfferingNotFoundException;
-import com.onrender.navkolodozvillya.exception.UserNotFoundException;
-import com.onrender.navkolodozvillya.offering.OfferingRepository;
-import com.onrender.navkolodozvillya.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,9 +12,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FavouriteOfferingServiceImpl implements FavouriteOfferingService {
     private final FavouriteOfferingRepository favouriteOfferingRepository;
-    private final UserRepository userRepository;
-    private final OfferingRepository offeringRepository;
-    private final FavouriteOfferingResponseMapper mapper;
     @Override
     public List<FavouriteOfferingResponse> findAllBy(Principal principal) {
         String userEmail = principal.getName();
