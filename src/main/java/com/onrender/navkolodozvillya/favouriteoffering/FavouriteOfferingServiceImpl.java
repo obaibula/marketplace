@@ -4,16 +4,13 @@ import com.onrender.navkolodozvillya.exception.OfferingIsAlreadyInFavoritesExcep
 import com.onrender.navkolodozvillya.exception.OfferingNotFoundException;
 import com.onrender.navkolodozvillya.exception.UserNotFoundException;
 import com.onrender.navkolodozvillya.offering.OfferingRepository;
-import com.onrender.navkolodozvillya.offering.OfferingService;
 import com.onrender.navkolodozvillya.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -28,48 +25,26 @@ public class FavouriteOfferingServiceImpl implements FavouriteOfferingService {
         return favouriteOfferingRepository.findAllByUserEmail(userEmail);
     }
 
-    /*@Override
+    // This optimization guarantees the avoidance of dirty checking
+    // and the use of 3 queries instead of 4, as in the previous solution.
+    // (see commit 6c4d4c12 on 27.07.2023 at 8:25)
+    // Adding to favorites must be fast, so this method needs further optimizations in the future
     @Transactional
-    // todo: refactor, it works, but overcomplicated(?). It should be in 1-2 queries.
     public FavouriteOfferingResponse save(Long offeringId, Principal principal) {
         var userEmail = principal.getName();
         // All offerings must be unique for every user in their favorites
+        checkIfAlreadyInFavourites(offeringId, userEmail);
+        // todo: rename
+        favouriteOfferingRepository.saveByUserEmailAndOfferingIdUsingNativeQuery(userEmail, offeringId);
+
+        return favouriteOfferingRepository.findByUserEmailAndOfferingId(userEmail, offeringId);
+    }
+
+    private void checkIfAlreadyInFavourites(Long offeringId, String userEmail) {
         var favoriteOfferingExists =
                 favouriteOfferingRepository.existsByUserEmailAndOfferingId(userEmail, offeringId);
         if (favoriteOfferingExists) {
-            throw new OfferingIsAlreadyInFavoritesException("Offering is already in favorites.");
+            throw new OfferingIsAlreadyInFavoritesException("Offering is already in favourites.");
         }
-
-        // If the offering is not in the user's favorites, add it.
-        var user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UserNotFoundException("User not found with email - " + userEmail));
-        var offering = offeringRepository.findById(offeringId)
-                .orElseThrow(() -> new OfferingNotFoundException("Offering not found with id - " + offeringId));
-
-
-        var favourite = new FavouriteOffering();
-        favourite.setUser(user);
-        favourite.setOffering(offering);
-
-        var saved = favouriteOfferingRepository.save(favourite);
-
-        return mapper.apply(saved);
-    }*/
-
-    @Transactional
-    // todo: refactor, it works, but overcomplicated(?). It should be in 1-2 queries.
-    public FavouriteOfferingResponse save(Long offeringId, Principal principal) {
-        var userEmail = principal.getName();
-        // All offerings must be unique for every user in their favorites
-        /*var favoriteOfferingExists =
-                favouriteOfferingRepository.existsByUserEmailAndOfferingId(userEmail, offeringId);
-        if (favoriteOfferingExists) {
-            throw new OfferingIsAlreadyInFavoritesException("Offering is already in favorites.");
-        }*/
-
-
-        var saved = favouriteOfferingRepository.customSave(userEmail, offeringId);
-
-        return saved;
     }
 }
