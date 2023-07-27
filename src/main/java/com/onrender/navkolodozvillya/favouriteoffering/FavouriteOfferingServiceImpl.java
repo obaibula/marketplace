@@ -28,9 +28,9 @@ public class FavouriteOfferingServiceImpl implements FavouriteOfferingService {
         return favouriteOfferingRepository.findAllByUserEmail(userEmail);
     }
 
-    @Override
+    /*@Override
     @Transactional
-    // todo: refactor, it works, but overcomplicated(?)
+    // todo: refactor, it works, but overcomplicated(?). It should be in 1-2 queries.
     public FavouriteOfferingResponse save(Long offeringId, Principal principal) {
         var userEmail = principal.getName();
         // All offerings must be unique for every user in their favorites
@@ -41,7 +41,7 @@ public class FavouriteOfferingServiceImpl implements FavouriteOfferingService {
         }
 
         // If the offering is not in the user's favorites, add it.
-        var user = userRepository.findByEmail(userEmail) // todo: Why is the cart eagerly fetched?
+        var user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException("User not found with email - " + userEmail));
         var offering = offeringRepository.findById(offeringId)
                 .orElseThrow(() -> new OfferingNotFoundException("Offering not found with id - " + offeringId));
@@ -54,5 +54,22 @@ public class FavouriteOfferingServiceImpl implements FavouriteOfferingService {
         var saved = favouriteOfferingRepository.save(favourite);
 
         return mapper.apply(saved);
+    }*/
+
+    @Transactional
+    // todo: refactor, it works, but overcomplicated(?). It should be in 1-2 queries.
+    public FavouriteOfferingResponse save(Long offeringId, Principal principal) {
+        var userEmail = principal.getName();
+        // All offerings must be unique for every user in their favorites
+        /*var favoriteOfferingExists =
+                favouriteOfferingRepository.existsByUserEmailAndOfferingId(userEmail, offeringId);
+        if (favoriteOfferingExists) {
+            throw new OfferingIsAlreadyInFavoritesException("Offering is already in favorites.");
+        }*/
+
+
+        var saved = favouriteOfferingRepository.customSave(userEmail, offeringId);
+
+        return saved;
     }
 }
