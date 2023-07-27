@@ -1,30 +1,29 @@
 package com.onrender.navkolodozvillya.offering;
 
-import com.onrender.navkolodozvillya.exception.OfferingNotFoundException;
+import com.onrender.navkolodozvillya.exception.entity.offering.OfferingNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
 public class OfferingServiceImpl implements OfferingService {
     private final OfferingRepository offeringRepository;
-    private final OfferingResponseMapper mapToResponseDto;
+    private final OfferingResponseMapper offeringResponseMapper;
 
     @Override
     public List<OfferingResponse> findAll(Pageable pageable) {
         return offeringRepository.findAll(pageable)
-                .map(mapToResponseDto)
+                .map(offeringResponseMapper::offeringToOfferingResponseDto)
                 .toList();
     }
 
     @Override
     public OfferingResponse findById(Long offeringId) {
         return offeringRepository.findById(offeringId)
-                .map(mapToResponseDto)
+                .map(offeringResponseMapper::offeringToOfferingResponseDto)
                 .orElseThrow(() -> new OfferingNotFoundException("Offering not found with id - " + offeringId));
     }
 }

@@ -1,25 +1,25 @@
 package com.onrender.navkolodozvillya.user;
 
 
-import com.onrender.navkolodozvillya.cart.Cart;
 import com.onrender.navkolodozvillya.favouriteoffering.FavouriteOffering;
 import com.onrender.navkolodozvillya.offering.Offering;
 import com.onrender.navkolodozvillya.token.Token;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(of = "email")
 @Entity
 @Table(name = "users")
 @ToString
@@ -46,16 +46,19 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user",
             orphanRemoval = true,
             cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Token> tokens;
 
     @OneToMany(mappedBy = "user",
             orphanRemoval = true,
             cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Offering> offerings;
 
     @OneToMany(mappedBy = "user",
             orphanRemoval = true,
             cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<FavouriteOffering> favouriteOfferings;
 
     public void addOffering(Offering offering) {
@@ -105,5 +108,21 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        User user = (User) o;
+        return getId() != null && Objects.equals(getId(), user.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 }

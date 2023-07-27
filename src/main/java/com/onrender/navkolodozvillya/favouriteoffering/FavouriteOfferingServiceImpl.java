@@ -1,6 +1,6 @@
 package com.onrender.navkolodozvillya.favouriteoffering;
 
-import com.onrender.navkolodozvillya.exception.OfferingIsAlreadyInFavoritesException;
+import com.onrender.navkolodozvillya.exception.entity.offering.OfferingIsAlreadyInFavoritesException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

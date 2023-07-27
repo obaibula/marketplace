@@ -1,6 +1,6 @@
 package com.onrender.navkolodozvillya.favouriteoffering;
 
-import com.onrender.navkolodozvillya.exception.OfferingIsAlreadyInFavoritesException;
+import com.onrender.navkolodozvillya.exception.entity.offering.OfferingIsAlreadyInFavoritesException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -40,13 +40,13 @@ class OfferingServiceTest {
         Page<Offering> offeringPage = new PageImpl<>(offerings);
         given(offeringRepository.findAll(any(Pageable.class)))
                 .willReturn(offeringPage);
-        given(offeringResponseMapper.apply(any(Offering.class)))
+        given(offeringResponseMapper.offeringToOfferingResponseDto(any(Offering.class)))
                 .willAnswer(getOfferingResponseAnswer());
         // when
         var result = underTest.findAll(Pageable.unpaged());
         // then
         verify(offeringRepository, times(1)).findAll(any(Pageable.class));
-        verify(offeringResponseMapper, times(2)).apply(any(Offering.class));
+        verify(offeringResponseMapper, times(2)).offeringToOfferingResponseDto(any(Offering.class));
         assertThat(result.size()).isEqualTo(2);
     }
 
@@ -57,13 +57,13 @@ class OfferingServiceTest {
         var offering = getOfferingList().get(1);
         given(offeringRepository.findById(offeringId))
                 .willReturn(Optional.of(offering));
-        given(offeringResponseMapper.apply(any(Offering.class)))
+        given(offeringResponseMapper.offeringToOfferingResponseDto(any(Offering.class)))
                 .willAnswer(getOfferingResponseAnswer());
         // when
         var result = underTest.findById(offeringId);
         // then
         verify(offeringRepository, times(1)).findById(offeringId);
-        verify(offeringResponseMapper, times(1)).apply(offering);
+        verify(offeringResponseMapper, times(1)).offeringToOfferingResponseDto(offering);
         assertThat(result.description()).isEqualTo(offering.getDescription());
     }
 

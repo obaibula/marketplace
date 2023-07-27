@@ -1,6 +1,6 @@
 package com.onrender.navkolodozvillya.user;
 
-import com.onrender.navkolodozvillya.exception.UserNotFoundException;
+import com.onrender.navkolodozvillya.exception.entity.user.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse findById(Long userId) {
         return userRepository.findById(userId)
-                .map(userResponseMapper)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id - " + userId));
+                .map(userResponseMapper::UserToUserResponseDto)
+                .orElseThrow(() -> new UserNotFoundException(
+                        "User not found with id - " + userId));
     }
 }

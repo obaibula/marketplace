@@ -1,6 +1,8 @@
 package com.onrender.navkolodozvillya.exception;
 
-import io.jsonwebtoken.ExpiredJwtException;
+import com.onrender.navkolodozvillya.exception.authorization.AuthorizationException;
+import com.onrender.navkolodozvillya.exception.entity.EntityNotFoundException;
+import com.onrender.navkolodozvillya.exception.entity.ResourceAlreadyExistsException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;

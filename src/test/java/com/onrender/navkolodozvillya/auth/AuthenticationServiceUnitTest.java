@@ -2,10 +2,10 @@ package com.onrender.navkolodozvillya.auth;
 
 import com.onrender.navkolodozvillya.cart.CartService;
 import com.onrender.navkolodozvillya.config.JwtService;
-import com.onrender.navkolodozvillya.exception.InvalidTokenException;
-import com.onrender.navkolodozvillya.exception.MissingAuthorizationHeaderException;
-import com.onrender.navkolodozvillya.exception.UserAlreadyExistsException;
-import com.onrender.navkolodozvillya.exception.UserNotFoundException;
+import com.onrender.navkolodozvillya.exception.authorization.InvalidTokenException;
+import com.onrender.navkolodozvillya.exception.authorization.MissingAuthorizationHeaderException;
+import com.onrender.navkolodozvillya.exception.entity.user.UserAlreadyExistsException;
+import com.onrender.navkolodozvillya.exception.entity.user.UserNotFoundException;
 import com.onrender.navkolodozvillya.token.Token;
 import com.onrender.navkolodozvillya.token.TokenRepository;
 import com.onrender.navkolodozvillya.user.User;
