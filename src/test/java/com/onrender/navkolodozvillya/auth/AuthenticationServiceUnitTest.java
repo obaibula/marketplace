@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -64,7 +65,7 @@ class AuthenticationServiceUnitTest {
     @Test
     public void shouldRegisterUser(){
         // given
-        var requst = new RegisterRequest(
+        var request = new RegisterRequest(
                 "John",
                 "Doe",
                 "user@mail.com",
@@ -78,12 +79,16 @@ class AuthenticationServiceUnitTest {
                 .willReturn(mockUser);
         
         // when
-        var response = underTest.register(requst);
+        var response = underTest.register(request);
 
         // then
-        verify(jwtService, times(1)).generateToken(mockUser);
-        verify(jwtService, times(1)).generateRefreshToken(mockUser);
-        verify(cartService, times(1)).createCart(mockUser);
+        var userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        verify(jwtService, times(1))
+                .generateToken(userArgumentCaptor.capture());
+        verify(jwtService, times(1))
+                .generateRefreshToken(userArgumentCaptor.capture());
+        verify(cartService, times(1))
+                .createCart(userArgumentCaptor.capture());
         assertThat(response).isNotNull();
     }
 

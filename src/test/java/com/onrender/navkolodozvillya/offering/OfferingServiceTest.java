@@ -1,5 +1,6 @@
 package com.onrender.navkolodozvillya.offering;
 
+import com.onrender.navkolodozvillya.exception.entity.offering.OfferingNotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -65,6 +68,18 @@ class OfferingServiceTest {
         verify(offeringRepository, times(1)).findById(offeringId);
         verify(offeringResponseMapper, times(1)).offeringToOfferingResponseDto(offering);
         assertThat(result.description()).isEqualTo(offering.getDescription());
+    }
+
+    @Test
+    public void shouldThrowWhenCanNotFindById(){
+        // given
+        var offeringId = 900L;
+        given(offeringRepository.findById(anyLong()))
+                .willReturn(Optional.empty());
+        // then
+        assertThatThrownBy(() -> underTest.findById(offeringId))
+                .isInstanceOf(OfferingNotFoundException.class)
+                .hasMessage("Offering not found with id - " + offeringId);
     }
 
     @NotNull
