@@ -1,6 +1,8 @@
 package com.onrender.navkolodozvillya.favouriteoffering;
 
 import com.onrender.navkolodozvillya.exception.entity.offering.OfferingIsAlreadyInFavoritesException;
+import com.onrender.navkolodozvillya.exception.entity.offering.OfferingNotFoundException;
+import com.onrender.navkolodozvillya.offering.OfferingRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,12 +25,14 @@ public class FavouriteOfferingServiceTest {
     @Mock
     private FavouriteOfferingRepository favouriteOfferingRepository;
     @Mock
+    OfferingRepository offeringRepository;
+    @Mock
     private Principal principal;
     private FavouriteOfferingService underTest;
 
     @BeforeEach
     void setUp(){
-        underTest = new FavouriteOfferingServiceImpl(favouriteOfferingRepository);
+        underTest = new FavouriteOfferingServiceImpl(favouriteOfferingRepository, offeringRepository);
     }
 
     @Test
@@ -59,8 +63,11 @@ public class FavouriteOfferingServiceTest {
         given(favouriteOfferingRepository.existsByUserEmailAndOfferingId(anyString(), anyLong()))
                 .willReturn(false);
         var expected = new FavouriteOfferingResponse(5L, 2L, 3L);
+        given(offeringRepository.existsById(anyLong()))
+                .willReturn(true);
         given(favouriteOfferingRepository.findByUserEmailAndOfferingId(anyString(), anyLong()))
                 .willReturn(expected);
+
         // when
         var result = underTest.save(3L, principal);
         // then
@@ -80,11 +87,28 @@ public class FavouriteOfferingServiceTest {
         var email = "user@mail.com";
         given(principal.getName())
                 .willReturn(email);
+        given(offeringRepository.existsById(anyLong()))
+                .willReturn(true);
         given(favouriteOfferingRepository.existsByUserEmailAndOfferingId(anyString(), anyLong()))
                 .willReturn(true);
         // when
         assertThatThrownBy(() -> underTest.save(1L, principal))
                 .isInstanceOf(OfferingIsAlreadyInFavoritesException.class)
                 .hasMessage("Offering is already in favourites.");
+    }
+
+    @Test
+    public void shouldThrowWhenOfferingDoesNotExist(){
+        // given
+        var email = "user@mail.com";
+        var offeringId = 500L;
+        given(principal.getName())
+                .willReturn(email);
+        given(offeringRepository.existsById(anyLong()))
+                .willReturn(false);
+        // then
+        assertThatThrownBy(() -> underTest.save(offeringId, principal))
+                .isInstanceOf(OfferingNotFoundException.class)
+                .hasMessage("Offering not found with id - " + offeringId);
     }
 }

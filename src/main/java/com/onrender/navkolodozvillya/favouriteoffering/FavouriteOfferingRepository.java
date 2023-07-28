@@ -9,7 +9,6 @@ import java.util.List;
 public interface FavouriteOfferingRepository extends JpaRepository<FavouriteOffering, Long>{
     // find all to dto by principal email
     List<FavouriteOfferingResponse> findAllByUserEmail(String userEmail);
-
     boolean existsByUserEmailAndOfferingId(String userEmail, Long offeringId);
     @Modifying
     @Query(value = """
