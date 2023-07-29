@@ -24,7 +24,7 @@ class GeoIpServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new GeoIpServiceImpl(repository);
+        underTest = new GeoIpService(repository);
     }
 
     @Test

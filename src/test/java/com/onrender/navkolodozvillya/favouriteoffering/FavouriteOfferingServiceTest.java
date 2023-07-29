@@ -32,7 +32,7 @@ public class FavouriteOfferingServiceTest {
 
     @BeforeEach
     void setUp(){
-        underTest = new FavouriteOfferingServiceImpl(favouriteOfferingRepository, offeringRepository);
+        underTest = new FavouriteOfferingService(favouriteOfferingRepository, offeringRepository);
     }
 
     @Test

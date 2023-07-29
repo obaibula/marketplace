@@ -30,7 +30,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new UserServiceImpl(userRepository, userResponseMapper);
+        underTest = new UserService(userRepository, userResponseMapper);
     }
 
     @Test

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -22,7 +21,7 @@ public class CartServiceTest {
     private CartService underTest;
     @BeforeEach
     void setUp() {
-        underTest = new CartServiceImpl(cartRepository);
+        underTest = new CartService(cartRepository);
     }
 
     @Test

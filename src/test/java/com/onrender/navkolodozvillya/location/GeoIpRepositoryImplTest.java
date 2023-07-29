@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class GeoIpRepositoryImplTest {
 
     @Autowired
-    private GeoIpRepositoryImpl underTest;
+    private GeoIpRepository underTest;
 
 
     @BeforeEach

@@ -33,7 +33,7 @@ class OfferingServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new OfferingServiceImpl(offeringRepository, offeringResponseMapper);
+        underTest = new OfferingService(offeringRepository, offeringResponseMapper);
     }
 
     @Test
