@@ -20,6 +20,7 @@ import static org.springframework.http.ResponseEntity.created;
 @RequestMapping("/favourites")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "bearerAuth")
+@CrossOrigin
 public class FavouriteOfferingController {
     private final FavouriteOfferingService favouriteOfferingService;
 
