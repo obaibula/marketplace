@@ -1,5 +1,7 @@
 package com.onrender.navkolodozvillya.offering;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,12 +16,15 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
 
+@Tag(name = "Offering Controller", description = "Offering related APIs")
 @RestController
 @RequestMapping("/offerings")
 @RequiredArgsConstructor
 public class OfferingController {
     private final OfferingService offeringService;
 
+    @Operation(summary = "Get all offerings",
+            description = "Retrieve a list of all offerings with paging and sorting")
     @GetMapping
     public ResponseEntity<List<OfferingResponse>> getAll(Pageable pageable){
         var offerings = offeringService.findAll(createPageRequest(pageable));
@@ -27,6 +32,8 @@ public class OfferingController {
         return ResponseEntity.ok(offerings);
     }
 
+    @Operation(summary = "Get offering by ID",
+            description = "Retrieve an offering by its ID")
     @GetMapping("/{offeringId}")
     public ResponseEntity<OfferingResponse> getOne(@PathVariable Long offeringId){
         var offeringResponse = offeringService.findById(offeringId);

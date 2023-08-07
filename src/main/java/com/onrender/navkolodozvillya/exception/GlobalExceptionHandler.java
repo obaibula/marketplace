@@ -6,6 +6,7 @@ import com.onrender.navkolodozvillya.exception.entity.ResourceAlreadyExistsExcep
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,6 +35,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthorizationException.class)
     public ResponseEntity<Map<String, List<String>>>
     handleValidationErrors(AuthorizationException e) {
+        e.printStackTrace();
+        var errors = List.of(e.getMessage());
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public final ResponseEntity<Map<String, List<String>>>
+    handleEntityNotFoundException(BadCredentialsException e){
         e.printStackTrace();
         var errors = List.of(e.getMessage());
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), UNAUTHORIZED);
