@@ -4,6 +4,8 @@ import com.onrender.navkolodozvillya.favouriteoffering.FavouriteOffering;
 import com.onrender.navkolodozvillya.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.math.BigDecimal;
@@ -39,9 +41,11 @@ public class Offering {
 
     @Column(updatable = false)
     @Setter(AccessLevel.PRIVATE)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Setter(AccessLevel.PRIVATE)
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY,
@@ -62,18 +66,6 @@ public class Offering {
     public void removeFavouriteOffering(FavouriteOffering favouriteOffering) {
         favouriteOfferings.remove(favouriteOffering);
         favouriteOffering.setOffering(null);
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        var now = LocalDateTime.now();
-        setCreatedAt(now);
-        setUpdatedAt(now);
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        setUpdatedAt(LocalDateTime.now());
     }
 
     @Override

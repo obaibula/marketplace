@@ -4,6 +4,7 @@ import com.onrender.navkolodozvillya.offering.Offering;
 import com.onrender.navkolodozvillya.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ public class FavouriteOffering {
 
     @Column(updatable = false)
     @Setter(AccessLevel.PRIVATE)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY,
@@ -33,11 +35,6 @@ public class FavouriteOffering {
             optional = false)
     @JoinColumn(name = "offering_id")
     private Offering offering;
-
-    @PrePersist
-    protected void onCreate() {
-        setCreatedAt(LocalDateTime.now());
-    }
 
     @Override
     public final boolean equals(Object o) {
