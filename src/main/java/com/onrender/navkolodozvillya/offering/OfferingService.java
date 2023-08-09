@@ -14,7 +14,7 @@ public class OfferingService {
     private final OfferingResponseMapper offeringResponseMapper;
 
     public List<OfferingResponse> findAll(Pageable pageable) {
-        return offeringRepository.findAll(pageable)
+        return offeringRepository.findBy(pageable)
                 .map(offeringResponseMapper::offeringToOfferingResponseDto)
                 .toList();
     }
