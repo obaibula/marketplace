@@ -2,8 +2,12 @@ package com.onrender.navkolodozvillya.favouriteoffering;
 
 import com.onrender.navkolodozvillya.exception.entity.offering.OfferingIsAlreadyInFavoritesException;
 import com.onrender.navkolodozvillya.exception.entity.offering.OfferingNotFoundException;
+import com.onrender.navkolodozvillya.exception.entity.user.UserNotFoundException;
 import com.onrender.navkolodozvillya.offering.OfferingRepository;
+import com.onrender.navkolodozvillya.user.User;
+import com.onrender.navkolodozvillya.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,36 +19,39 @@ import java.util.List;
 public class FavouriteOfferingService {
     private final FavouriteOfferingRepository favouriteOfferingRepository;
     private final OfferingRepository offeringRepository;
+    private final UserRepository userRepository;
+
     public List<FavouriteOfferingResponse> findAllBy(Principal principal) {
         String userEmail = principal.getName();
         return favouriteOfferingRepository.findAllByUserEmail(userEmail);
     }
 
-    // This optimization guarantees the avoidance of dirty checking
-    // and the use of 3 queries instead of 4, as in the previous solution.
-    // (see commit 6c4d4c12 on 27.07.2023 at 8:25)
-    // Adding to favorites must be fast, so this method needs further optimizations in the future
     @Transactional
-    public FavouriteOfferingResponse save(Long offeringId, Principal principal) {
-        var userEmail = principal.getName();
+    public FavouriteOfferingResponse save(Long offeringId, Authentication authentication) {
         checkIfOfferingExists(offeringId);
-        // All offerings must be unique for every user in their favorites
-        checkIfAlreadyInFavourites(offeringId, userEmail);
-        // todo: rename
-        favouriteOfferingRepository.saveByUserEmailAndOfferingIdUsingNativeQuery(userEmail, offeringId);
+        var user = (User)authentication.getPrincipal();
+        var userId = user.getId();
 
-        return favouriteOfferingRepository.findByUserEmailAndOfferingId(userEmail, offeringId);
+        checkIfAlreadyInFavourites(userId, offeringId);
+
+        var favourite = new FavouriteOffering();
+        favourite.setUser(userRepository.getReferenceById(userId));
+        favourite.setOffering(offeringRepository.getReferenceById(offeringId));
+        var saved = favouriteOfferingRepository.save(favourite);
+
+        return new FavouriteOfferingResponse(saved.getId(), userId, offeringId);
     }
 
     private void checkIfOfferingExists(Long offeringId) {
-        if(!offeringRepository.existsById(offeringId)){
-            throw new OfferingNotFoundException("Offering not found with id - " + offeringId);
+        var offeringExists = offeringRepository.existsById(offeringId);
+        if(!offeringExists){
+            throw new OfferingNotFoundException("Offering not found with id: " + offeringId);
         }
     }
 
-    private void checkIfAlreadyInFavourites(Long offeringId, String userEmail) {
+    private void checkIfAlreadyInFavourites(Long userId, Long offeringId ) {
         var favoriteOfferingExists =
-                favouriteOfferingRepository.existsByUserEmailAndOfferingId(userEmail, offeringId);
+                favouriteOfferingRepository.existsByUserIdAndOfferingId(userId, offeringId);
         if (favoriteOfferingExists) {
             throw new OfferingIsAlreadyInFavoritesException("Offering is already in favourites.");
         }

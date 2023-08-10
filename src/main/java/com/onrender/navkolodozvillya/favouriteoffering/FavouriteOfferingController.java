@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -36,8 +37,8 @@ public class FavouriteOfferingController {
     @PostMapping("/{offeringId}")
     public ResponseEntity<FavouriteOfferingResponse>
     addOfferingToFavourites(@PathVariable Long offeringId,
-                            Principal principal) {
-        var savedFavourite = favouriteOfferingService.save(offeringId, principal);
+                            Authentication authentication) {
+        var savedFavourite = favouriteOfferingService.save(offeringId, authentication);
 
         return created(getLocation(savedFavourite))
                 .body(savedFavourite);
