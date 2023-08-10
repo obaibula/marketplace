@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface FavouriteOfferingRepository extends JpaRepository<FavouriteOffering, Long>{
     // find all to dto by principal email
-    List<FavouriteOfferingResponse> findAllByUserEmail(String userEmail);
+    List<FavouriteOfferingResponse> findAllByUserId(Long userId);
     boolean existsByUserIdAndOfferingId(Long userId, Long offeringId);
 }

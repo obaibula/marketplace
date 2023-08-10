@@ -2,16 +2,13 @@ package com.onrender.navkolodozvillya.favouriteoffering;
 
 import com.onrender.navkolodozvillya.exception.entity.offering.OfferingIsAlreadyInFavoritesException;
 import com.onrender.navkolodozvillya.exception.entity.offering.OfferingNotFoundException;
-import com.onrender.navkolodozvillya.exception.entity.user.UserNotFoundException;
 import com.onrender.navkolodozvillya.offering.OfferingRepository;
 import com.onrender.navkolodozvillya.user.User;
 import com.onrender.navkolodozvillya.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
 import java.util.List;
 
 @Service
@@ -21,17 +18,14 @@ public class FavouriteOfferingService {
     private final OfferingRepository offeringRepository;
     private final UserRepository userRepository;
 
-    public List<FavouriteOfferingResponse> findAllBy(Principal principal) {
-        String userEmail = principal.getName();
-        return favouriteOfferingRepository.findAllByUserEmail(userEmail);
+    public List<FavouriteOfferingResponse> findAllBy(User user) {
+        return favouriteOfferingRepository.findAllByUserId(user.getId());
     }
 
     @Transactional
-    public FavouriteOfferingResponse save(Long offeringId, Authentication authentication) {
+    public FavouriteOfferingResponse save(Long offeringId, User user) {
         checkIfOfferingExists(offeringId);
-        var user = (User)authentication.getPrincipal();
         var userId = user.getId();
-
         checkIfAlreadyInFavourites(userId, offeringId);
 
         var favourite = new FavouriteOffering();

@@ -1,11 +1,13 @@
 package com.onrender.navkolodozvillya.favouriteoffering;
 
+import com.onrender.navkolodozvillya.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -28,8 +30,9 @@ public class FavouriteOfferingController {
     @Operation(summary = "Get all favourite offerings",
             description = "Retrieve a list of favourite offerings for the authenticated user")
     @GetMapping
-            public ResponseEntity<List<FavouriteOfferingResponse>> findAll(Principal principal) {
-        return ResponseEntity.ok(favouriteOfferingService.findAllBy(principal));
+            public ResponseEntity<List<FavouriteOfferingResponse>> findAll(
+                    @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(favouriteOfferingService.findAllBy(user));
     }
 
     @Operation(summary = "Add offering to favourites",
@@ -37,8 +40,8 @@ public class FavouriteOfferingController {
     @PostMapping("/{offeringId}")
     public ResponseEntity<FavouriteOfferingResponse>
     addOfferingToFavourites(@PathVariable Long offeringId,
-                            Authentication authentication) {
-        var savedFavourite = favouriteOfferingService.save(offeringId, authentication);
+                            @AuthenticationPrincipal User user) {
+        var savedFavourite = favouriteOfferingService.save(offeringId, user);
 
         return created(getLocation(savedFavourite))
                 .body(savedFavourite);

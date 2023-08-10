@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.Authentication;
 
 import java.security.Principal;
 import java.util.List;
@@ -32,8 +31,6 @@ public class FavouriteOfferingServiceTest {
     @Mock
     private FavouriteOfferingRepository favouriteOfferingRepository;
     @Mock
-    private Authentication authentication;
-    @Mock
     private Principal principal;
     private FavouriteOfferingService underTest;
 
@@ -45,19 +42,18 @@ public class FavouriteOfferingServiceTest {
     @Test
     public void shouldFindAllByPrincipalEmail() {
         // given
-        var email = "user@mail.com";
-        given(principal.getName())
-                .willReturn(email);
+        var user = new User();
+        user.setId(2L);
         var favourites =
                 List.of(
-                        new FavouriteOfferingResponse(1L, 1L, 1L),
+                        new FavouriteOfferingResponse(1L, 2L, 3L),
                         new FavouriteOfferingResponse(2L, 2L, 1L));
-        given(favouriteOfferingRepository.findAllByUserEmail(anyString()))
+        given(favouriteOfferingRepository.findAllByUserId(anyLong()))
                 .willReturn(favourites);
         // when
-        var result = underTest.findAllBy(principal);
+        var result = underTest.findAllBy(user);
         // then
-        verify(favouriteOfferingRepository, times(1)).findAllByUserEmail(email);
+        verify(favouriteOfferingRepository, times(1)).findAllByUserId(anyLong());
         assertThat(result).hasSize(2);
     }
 
@@ -71,8 +67,6 @@ public class FavouriteOfferingServiceTest {
         offering.setId(3L);
         given(offeringRepository.existsById(anyLong()))
                 .willReturn(true);
-        given(authentication.getPrincipal())
-                .willReturn(user);
 
         given(favouriteOfferingRepository.existsByUserIdAndOfferingId(anyLong(), anyLong()))
                 .willReturn(false);
@@ -85,7 +79,7 @@ public class FavouriteOfferingServiceTest {
 
 
         // when
-        var result = underTest.save(3L, authentication);
+        var result = underTest.save(3L, user);
         // then
         verify(favouriteOfferingRepository, times(1))
                 .existsByUserIdAndOfferingId(anyLong(), anyLong());
@@ -109,13 +103,11 @@ public class FavouriteOfferingServiceTest {
         offering.setId(3L);
         given(offeringRepository.existsById(anyLong()))
                 .willReturn(true);
-        given(authentication.getPrincipal())
-                .willReturn(user);
 
         given(favouriteOfferingRepository.existsByUserIdAndOfferingId(anyLong(), anyLong()))
                 .willReturn(true);
         // when
-        assertThatThrownBy(() -> underTest.save(3L, authentication))
+        assertThatThrownBy(() -> underTest.save(3L, user))
                 .isInstanceOf(OfferingIsAlreadyInFavoritesException.class)
                 .hasMessage("Offering is already in favourites.");
     }
@@ -126,7 +118,7 @@ public class FavouriteOfferingServiceTest {
         given(offeringRepository.existsById(anyLong()))
                 .willReturn(false);
         // when
-        assertThatThrownBy(() -> underTest.save(3L, authentication))
+        assertThatThrownBy(() -> underTest.save(3L, new User()))
                 .isInstanceOf(OfferingNotFoundException.class)
                 .hasMessage("Offering not found with id: 3");
     }
