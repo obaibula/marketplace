@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/city")
 @RequiredArgsConstructor
-@CrossOrigin
+@CrossOrigin //todo: expose to appropriate domains
 public class LocationController {
 
     private final GeoIpService geoIpService;

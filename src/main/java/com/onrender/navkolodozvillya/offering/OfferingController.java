@@ -17,7 +17,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/offerings")
 @RequiredArgsConstructor
-@CrossOrigin
+@CrossOrigin //todo: expose to appropriate domains
 public class OfferingController {
     private final OfferingService offeringService;
 

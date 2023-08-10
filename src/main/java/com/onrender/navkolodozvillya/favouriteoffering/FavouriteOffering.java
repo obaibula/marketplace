@@ -18,7 +18,7 @@ import java.util.Objects;
 @ToString(exclude = {"user", "offering"})
 public class FavouriteOffering {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(updatable = false)

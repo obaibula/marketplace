@@ -23,7 +23,7 @@ import static org.springframework.http.ResponseEntity.created;
 @RequestMapping("/favourites")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "bearerAuth")
-@CrossOrigin
+@CrossOrigin //todo: expose to appropriate domains
 public class FavouriteOfferingController {
     private final FavouriteOfferingService favouriteOfferingService;
 

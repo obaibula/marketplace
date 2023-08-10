@@ -12,4 +12,5 @@
     <include file="db/changelog/sql/V05_create-carts-table.sql"/>
     <include file="db/changelog/sql/V06_create-offerings-table.sql"/>
     <include file="db/changelog/sql/V07_create-favorite_offerings-table.sql"/>
+    <include file="db/changelog/sql/V08_create-sequences.sql"/>
 </databaseChangeLog>
