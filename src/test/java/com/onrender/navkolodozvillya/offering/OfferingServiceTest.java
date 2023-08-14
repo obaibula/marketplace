@@ -11,6 +11,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -40,15 +41,15 @@ class OfferingServiceTest {
     public void shouldFindAllOfferings(){
         // given
         var offerings = getOfferingList();
-        Page<Offering> offeringPage = new PageImpl<>(offerings);
-        given(offeringRepository.findAll(any(Pageable.class)))
+        Slice<Offering> offeringPage = new PageImpl<>(offerings);
+        given(offeringRepository.findBy(any(Pageable.class)))
                 .willReturn(offeringPage);
         given(offeringResponseMapper.offeringToOfferingResponseDto(any(Offering.class)))
                 .willAnswer(getOfferingResponseAnswer());
         // when
         var result = underTest.findAll(Pageable.unpaged());
         // then
-        verify(offeringRepository, times(1)).findAll(any(Pageable.class));
+        verify(offeringRepository, times(1)).findBy(any(Pageable.class));
         verify(offeringResponseMapper, times(2)).offeringToOfferingResponseDto(any(Offering.class));
         assertThat(result.size()).isEqualTo(2);
     }
