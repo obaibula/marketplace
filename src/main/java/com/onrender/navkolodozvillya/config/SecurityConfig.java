@@ -24,7 +24,9 @@ public class SecurityConfig {
 
     @Bean //todo: get rid of deprecated
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf()
+        http.cors()
+                .and()
+                .csrf()
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/**", "/city", "/offerings/**", "/users/**", "/doc/**", "/api-docs/**") // white list for authentication
